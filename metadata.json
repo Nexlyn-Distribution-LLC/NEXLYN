@@ -1,0 +1,9 @@
+{
+  "name": "NEXLYN - v2",
+  "description": "High-end AI-powered distribution interface for Nexlyn LLC. MikroTik Master Distributor.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
