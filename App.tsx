@@ -900,9 +900,9 @@ const App: React.FC = () => {
                 key={`content-${slideIndex}`} 
                 className={`relative z-10 max-w-7xl mx-auto px-6 w-full text-center space-y-12 ${isExiting ? 'hero-animate-out' : 'hero-animate-in'}`}
               >
-                <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">
+                <div className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">
                   NEXLYN - <span className="text-nexlyn">MikroTik Master Distributor</span>
-                </h2>
+                </div>
                 
                 <div className="inline-flex items-center gap-4 px-6 py-2 glass-panel rounded-full border border-nexlyn/40 stagger-1 shadow-2xl shadow-nexlyn/20">
                   <div className="w-2 h-2 rounded-full bg-nexlyn animate-pulse" />
