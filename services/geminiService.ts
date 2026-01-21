@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, GenerateContentResponse, Type, Modality, LiveServerMessage } from "@google/genai";
-import { GroundingSource } from "../types";
+import { GroundingSource, HomeContent } from "../types";
 
 const MODELS = {
   CHAT_PRO: "gemini-2.0-flash-exp",
@@ -58,6 +58,53 @@ export class GeminiService {
       .map(c => ({ title: c.web?.title || "Source", uri: c.web?.uri || "" })) || [];
       
     return { text: response.text || "Connection stable, awaiting next transmission.", sources };
+  }
+
+  // Fetch Home Content with AI-generated data
+  async fetchHomeContent(): Promise<HomeContent> {
+    const prompt = `
+      Provide structured information about NEXLYN Distribution LLC:
+      1. Hero section with compelling title, subtitle, and description about being a MikroTik Master Distributor
+      2. Three key statistics (e.g., years in business, product categories, regional coverage)
+      3. Four main features/benefits of partnering with NEXLYN
+      
+      Format as JSON with clear structure.
+    `;
+
+    try {
+      const response = await this.ai.models.generateContent({
+        model: MODELS.FAST_FLASH,
+        contents: prompt,
+        config: {
+          systemInstruction: `You are a content expert for NEXLYN Distributions. 
+          Provide accurate, professional B2B content about MikroTik distribution in the Middle East and Africa.
+          Return only valid JSON without markdown formatting.`,
+        },
+      });
+
+      const jsonText = response.text.replace(/```json\n?|\n?```/g, '').trim();
+      return JSON.parse(jsonText);
+    } catch (err) {
+      // Fallback with default structure
+      return {
+        hero: {
+          title: "NEXLYN DISTRIBUTIONS",
+          subtitle: "Official MikroTik® Master Distributor",
+          description: "Serving Middle East & Africa with carrier-grade networking solutions"
+        },
+        stats: [
+          { label: "Product Categories", value: "6+", icon: "Router" },
+          { label: "Regional Coverage", value: "MEA", icon: "Globe" },
+          { label: "Stock Status", value: "Live", icon: "Shield" }
+        ],
+        features: [
+          { title: "Master Distributor", description: "Official MikroTik partnership", icon: "Shield" },
+          { title: "Carrier-Grade", description: "Enterprise networking hardware", icon: "Router" },
+          { title: "Regional Hub", description: "Dubai-based distribution center", icon: "Globe" },
+          { title: "Technical Support", description: "Expert deployment guidance", icon: "Shield" }
+        ]
+      };
+    }
   }
 }
 

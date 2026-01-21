@@ -42,3 +42,21 @@ export interface HeroSlide {
 
 export type AspectRatio = '1:1' | '2:3' | '3:2' | '3:4' | '4:3' | '9:16' | '16:9' | '21:9';
 export type ImageSize = '1K' | '2K' | '4K';
+
+export interface HomeContent {
+  hero: {
+    title: string;
+    subtitle: string;
+    description: string;
+  };
+  stats: {
+    label: string;
+    value: string;
+    icon: string;
+  }[];
+  features: {
+    title: string;
+    description: string;
+    icon: string;
+  }[];
+}

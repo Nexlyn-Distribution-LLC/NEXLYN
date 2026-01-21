@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ICONS, PRODUCTS as INITIAL_PRODUCTS, CATEGORIES, WHATSAPP_NUMBER as INITIAL_WA, ADMIN_PASSCODE, OWNER_PASSCODE, HERO_SLIDES, VISUALS } from './constants';
-import { Product, Message, GroundingSource, Category } from './types';
+import { Product, Message, GroundingSource, Category, HomeContent } from './types';
 import { gemini } from './services/geminiService';
 
 // Helper function to get category-specific gradient pattern
@@ -68,6 +68,14 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
+  // --- HOME CONTENT STATE ---
+  const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
+  const [liveStats, setLiveStats] = useState({
+    totalProducts: 0,
+    inStock: 0,
+    categories: 0
+  });
+
   // --- THEME SYNC ---
   useEffect(() => {
     const root = window.document.documentElement;
@@ -94,6 +102,29 @@ const App: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Fetch home content on mount
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const content = await gemini.fetchHomeContent();
+        setHomeContent(content);
+      } catch (err) {
+        console.error('Failed to fetch home content:', err);
+      }
+    };
+    
+    fetchHomeData();
+  }, []);
+
+  // Update live stats whenever products change
+  useEffect(() => {
+    setLiveStats({
+      totalProducts: products.length,
+      inStock: products.filter(p => p.status === 'In Stock').length,
+      categories: new Set(products.map(p => p.category)).size
+    });
+  }, [products]);
 
   // Slide transition for Hero Blueprint Banners
   useEffect(() => {
@@ -253,6 +284,39 @@ const App: React.FC = () => {
       </button>
     );
   };
+
+  const LiveStatsBar = () => (
+    <div className="bg-nexlyn/5 border-y border-nexlyn/10 py-6 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center">
+          <div className="text-center space-y-2">
+            <div className="text-3xl font-black text-nexlyn">{liveStats.totalProducts}</div>
+            <div className="text-[8px] font-bold uppercase tracking-widest text-slate-500">Products</div>
+          </div>
+          <div className="text-center space-y-2">
+            <div className="text-3xl font-black text-green-500">{liveStats.inStock}</div>
+            <div className="text-[8px] font-bold uppercase tracking-widest text-slate-500">In Stock</div>
+          </div>
+          <div className="text-center space-y-2">
+            <div className="text-3xl font-black text-nexlyn">{liveStats.categories}</div>
+            <div className="text-[8px] font-bold uppercase tracking-widest text-slate-500">Categories</div>
+          </div>
+          <div className="text-center space-y-2">
+            <div className="text-3xl font-black text-nexlyn">24/7</div>
+            <div className="text-[8px] font-bold uppercase tracking-widest text-slate-500">Support</div>
+          </div>
+          <div className="text-center space-y-2">
+            <div className="text-3xl font-black text-nexlyn">MEA</div>
+            <div className="text-[8px] font-bold uppercase tracking-widest text-slate-500">Coverage</div>
+          </div>
+          <div className="text-center space-y-2">
+            <div className="text-3xl font-black text-green-500">✓</div>
+            <div className="text-[8px] font-bold uppercase tracking-widest text-slate-500">Verified</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const Logo = () => (
     <div 
@@ -907,17 +971,39 @@ const App: React.FC = () => {
                   </span>
                 </div>
                 
-                <h1 className="text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.85] uppercase italic text-slate-900 dark:text-white stagger-2 drop-shadow-2xl">
-                  {heroSlides[slideIndex].title.split(' ').map((word, i) => (
-                    <span key={i} className={i % 2 !== 0 ? 'text-nexlyn' : ''}>
-                      {word}{' '}
-                    </span>
-                  ))}
-                </h1>
-                
-                <p className="max-w-2xl mx-auto text-slate-700 dark:text-slate-200 text-lg md:text-xl font-bold leading-relaxed drop-shadow stagger-3">
-                  {heroSlides[slideIndex].subtitle}
-                </p>
+                {homeContent ? (
+                  <>
+                    <h1 className="text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.85] uppercase italic text-slate-900 dark:text-white stagger-2 drop-shadow-2xl">
+                      {homeContent.hero.title.split(' ').map((word, i) => (
+                        <span key={i} className={i % 2 !== 0 ? 'text-nexlyn' : ''}>
+                          {word}{' '}
+                        </span>
+                      ))}
+                    </h1>
+                    
+                    <p className="max-w-2xl mx-auto text-slate-700 dark:text-slate-200 text-lg md:text-xl font-bold leading-relaxed drop-shadow stagger-3">
+                      {homeContent.hero.subtitle}
+                    </p>
+                    
+                    <p className="max-w-3xl mx-auto text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed stagger-3">
+                      {homeContent.hero.description}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.85] uppercase italic text-slate-900 dark:text-white stagger-2 drop-shadow-2xl">
+                      {heroSlides[slideIndex].title.split(' ').map((word, i) => (
+                        <span key={i} className={i % 2 !== 0 ? 'text-nexlyn' : ''}>
+                          {word}{' '}
+                        </span>
+                      ))}
+                    </h1>
+                    
+                    <p className="max-w-2xl mx-auto text-slate-700 dark:text-slate-200 text-lg md:text-xl font-bold leading-relaxed drop-shadow stagger-3">
+                      {heroSlides[slideIndex].subtitle}
+                    </p>
+                  </>
+                )}
                 
                 <div className="flex flex-wrap justify-center gap-6 pt-6 stagger-4">
                   <button 
@@ -943,6 +1029,31 @@ const App: React.FC = () => {
                 />
               </div>
             </section>
+
+            <LiveStatsBar />
+
+            {homeContent?.features && (
+              <section className="py-20 px-6 max-w-7xl mx-auto">
+                <div className="text-center mb-12 space-y-4">
+                  <h2 className="text-4xl md:text-5xl font-black italic uppercase text-slate-900 dark:text-white leading-tight">
+                    WHY <span className="text-nexlyn">CHOOSE</span> NEXLYN?
+                  </h2>
+                  <div className="h-1 w-24 bg-nexlyn rounded-full mx-auto" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {homeContent.features.map((feature, idx) => (
+                    <div key={idx} className="glass-panel p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-nexlyn/30 transition-all space-y-4">
+                      <div className="w-12 h-12 rounded-xl bg-nexlyn/10 flex items-center justify-center">
+                        {ICONS[feature.icon as keyof typeof ICONS] && 
+                          React.createElement(ICONS[feature.icon as keyof typeof ICONS], { className: "w-6 h-6 text-nexlyn" })}
+                      </div>
+                      <h3 className="text-lg font-black uppercase text-slate-900 dark:text-white">{feature.title}</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{feature.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             <div className="bg-black/[0.02] dark:bg-white/[0.02] border-y border-black/5 dark:border-white/5 py-8 overflow-hidden">
               <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-center md:justify-between gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
