@@ -26,7 +26,7 @@ export class GeminiService {
   private getAI() {
     const apiKey = process.env.API_KEY;
     if (!apiKey) {
-      throw new Error('GEMINI_API_KEY is not configured. Please set it in your .env.local file.');
+      throw new Error('Gemini API key is not configured. Please set GEMINI_API_KEY in your .env.local file.');
     }
     return new GoogleGenAI({ apiKey });
   }
