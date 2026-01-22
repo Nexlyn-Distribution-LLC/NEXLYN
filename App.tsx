@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ICONS, PRODUCTS as INITIAL_PRODUCTS, CATEGORIES, WHATSAPP_NUMBER as INITIAL_WA, ADMIN_PASSCODE, HERO_SLIDES } from './constants';
 import { Product, Message, GroundingSource, Category } from './types';
 import { gemini } from './services/geminiService';
+import { uploadImage } from './services/cloudinaryService';
 
 type ViewType = 'home' | 'products' | 'detail' | 'admin' | 'about';
 type ThemeType = 'light' | 'dark';
@@ -233,6 +234,47 @@ const AdminView = ({
 }: any) => {
   const [passInput, setPassInput] = useState('');
   const [editProduct, setEditProduct] = useState<Partial<Product> | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Handle file upload to Cloudinary
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editProduct) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB');
+      return;
+    }
+    
+    setUploadProgress(true);
+    
+    try {
+      // Create local preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      
+      // Upload to Cloudinary
+      const imageUrl = await uploadImage(file);
+      setEditProduct({...editProduct, imageUrl});
+      
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Upload failed. Please try again or use a URL instead.');
+    } finally {
+      setUploadProgress(false);
+    }
+  };
 
   const stats = useMemo(() => ({
     total: products.length,
@@ -366,8 +408,73 @@ const AdminView = ({
                 </select>
               </div>
               <div className="space-y-3">
-                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Image Source (Visuals)</label>
-                <input value={editProduct.imageUrl} onChange={e => setEditProduct({...editProduct, imageUrl: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors" />
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Product Visual</label>
+                
+                {/* Image Preview */}
+                {(editProduct.imageUrl || imagePreview) && (
+                  <div className="relative w-full h-48 rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
+                    <img 
+                      src={imagePreview || editProduct.imageUrl} 
+                      alt="Product preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditProduct({...editProduct, imageUrl: ''});
+                        setImagePreview(null);
+                      }}
+                      className="absolute top-2 right-2 w-8 h-8 bg-nexlyn text-white rounded-full flex items-center justify-center hover:bg-nexlyn/80 transition-colors"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+                
+                {/* Upload Options */}
+                <div className="grid grid-cols-1 gap-4">
+                  {/* File Upload */}
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploadProgress}
+                      className="hidden" 
+                      id="image-upload"
+                    />
+                    <label 
+                      htmlFor="image-upload"
+                      className={`block w-full p-5 rounded-2xl text-center border-2 border-dashed cursor-pointer transition-all
+                        ${uploadProgress 
+                          ? 'border-nexlyn/50 bg-nexlyn/5 cursor-wait' 
+                          : 'border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 hover:border-nexlyn hover:bg-nexlyn/5'
+                        }`}
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <ICONS.Upload className="w-6 h-6 text-slate-500" />
+                        <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                          {uploadProgress ? 'Uploading...' : 'Upload Image File'}
+                        </span>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-wider">
+                          PNG, JPG, WEBP (Max 5MB)
+                        </span>
+                      </div>
+                    </label>
+                  </div>
+                  
+                  {/* Manual URL Entry (fallback) */}
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase text-slate-400 tracking-widest">Or Enter URL Manually</label>
+                    <input 
+                      type="url"
+                      value={editProduct.imageUrl || ''} 
+                      onChange={e => setEditProduct({...editProduct, imageUrl: e.target.value})} 
+                      placeholder="https://example.com/image.jpg"
+                      className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 rounded-xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors" 
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             <div className="space-y-3">
