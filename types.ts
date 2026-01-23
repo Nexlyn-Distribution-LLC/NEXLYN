@@ -12,18 +12,6 @@ export interface Product {
   featured?: boolean;
 }
 
-export interface GroundingSource {
-  title: string;
-  uri: string;
-}
-
-export interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-  sources?: GroundingSource[];
-  thought?: string;
-}
-
 export interface Category {
   name: string;
   id: string;

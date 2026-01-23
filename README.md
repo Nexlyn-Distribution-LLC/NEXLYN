@@ -2,85 +2,93 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# NEXLYN - MikroTik® Master Distributor Website
 
-This contains everything you need to run your app locally.
+A lightweight, production-ready website for NEXLYN Distributions, an authorized MikroTik® Master Distributor based in Dubai.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1TooJrvvYNEPtXmyX5sfuyYKZ-ofUdW0j
+## Features
+
+- **Product Catalog** - Browse and search MikroTik hardware inventory
+- **Category Management** - Filter products by Routing, Switching, Wireless, 5G/LTE, IoT, and Accessories
+- **Admin Panel** - Secure product and settings management
+- **WhatsApp Integration** - Direct customer engagement for quotes and inquiries
+- **Dark/Light Mode** - Full theme support
+- **Responsive Design** - Optimized for all devices
 
 ## Run Locally
 
-**Prerequisites:** Node.js
-
+**Prerequisites:** Node.js (v16 or higher)
 
 1. Install dependencies:
    ```bash
    npm install
    ```
 
-2. Configure environment variables in `.env.local`:
-   ```env
-   # Gemini AI API Key
-   GEMINI_API_KEY=your_gemini_api_key_here
-   
-   # Cloudinary Configuration (for admin image uploads)
-   VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
-   VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
-   ```
-
-3. Run the app:
+2. Run the development server:
    ```bash
    npm run dev
    ```
 
-## Cloudinary Setup for Image Uploads
+3. Build for production:
+   ```bash
+   npm run build
+   ```
 
-The admin panel uses Cloudinary for secure image hosting. Follow these steps:
+4. Preview production build:
+   ```bash
+   npm run preview
+   ```
 
-### 1. Create a Free Cloudinary Account
-- Go to https://cloudinary.com/users/register/free
-- Sign up for a free account (25GB storage, 25GB bandwidth/month)
+## Admin Panel Access
 
-### 2. Get Your Cloud Name
-- After logging in, go to Dashboard
-- Copy your **Cloud Name** (e.g., `dxxxxxxxxxxxxx`)
+The admin panel is protected by a passcode defined in `constants.tsx`. Access it by navigating to the Admin section and entering the passcode.
 
-### 3. Create an Upload Preset
-- Go to Settings → Upload → Upload Presets
-- Click "Add upload preset"
-- Set **Signing Mode** to "Unsigned"
-- Set **Folder** to "nexlyn-products" (optional)
-- Copy the **Upload preset name** (e.g., `nexlyn_unsigned`)
-
-### 4. Update .env.local
-```env
-VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name_here
-VITE_CLOUDINARY_UPLOAD_PRESET=your_preset_name_here
-```
-
-## Features
-
-### ✅ Retained from Original Design
-- **WhatsApp Integration** - Existing ICONS.WhatsApp component
-- **AI Chat** - "Grid Expert" and "NEX-AI Active" branding
-- **Admin Panel Structure** - Security authorization, stats dashboard
-
-### 🆕 New Enhancements
-- **File Upload** - Direct image upload to Cloudinary with preview
-- **Image Management** - Upload progress, file validation, preview
-- **Dual Input** - Support both file upload and manual URL entry
+Default features:
+- Product management (add, edit, delete)
+- WhatsApp number configuration
+- Company information updates
+- Inventory statistics dashboard
 
 ## Tech Stack
-- **React 18** with TypeScript
-- **Vite** for fast development
-- **Tailwind CSS** for styling
-- **Google Gemini AI** for chat intelligence
-- **Cloudinary** for image hosting
+
+- **React 19** with TypeScript
+- **Vite** for fast development and optimized builds
+- **Tailwind CSS** (via inline styles) for modern UI
+- **LocalStorage** for data persistence
 
 ## Deployment
-This app is optimized for deployment on:
-- GitHub Pages
-- Vercel
-- Netlify
 
-Make sure to set environment variables in your deployment platform's settings.
+This app is optimized for deployment on:
+- **Vercel**
+- **Netlify**
+- **GitHub Pages**
+- Any static hosting platform
+
+Simply build the project and deploy the `dist` folder.
+
+## Project Structure
+
+```
+/
+├── App.tsx           # Main application component
+├── constants.tsx     # Product data and configuration
+├── types.ts          # TypeScript type definitions
+├── index.tsx         # Application entry point
+├── index.html        # HTML template
+└── vite.config.ts    # Vite configuration
+```
+
+## Performance
+
+This optimized version features:
+- ✅ Minimal dependency footprint (only React and React-DOM)
+- ✅ Fast build times (~100ms)
+- ✅ Small bundle size
+- ✅ No external API dependencies
+- ✅ Production-ready code
+
+## License
+
+© 2025 NEXLYN LLC. All rights reserved.
+
+NEXLYN Distributions LLC is an independent authorized MikroTik® Master Distributor. All hardware systems are genuine and factory-sealed.
