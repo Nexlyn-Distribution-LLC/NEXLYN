@@ -10,9 +10,7 @@
   },
   "dependencies": {
     "react": "^19.2.3",
-    "@google/genai": "^1.37.0",
     "react-dom": "^19.2.3",
-    "recharts": "^3.6.0",
     "@cloudinary/react": "^1.13.0",
     "@cloudinary/url-gen": "^1.19.0"
   },
