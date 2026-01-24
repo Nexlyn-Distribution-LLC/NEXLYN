@@ -10,10 +10,12 @@ A lightweight, production-ready website for NEXLYN Distributions, an authorized 
 
 - **Product Catalog** - Browse and search MikroTik hardware inventory
 - **Category Management** - Filter products by Routing, Switching, Wireless, 5G/LTE, IoT, and Accessories
-- **Admin Panel** - Secure product and settings management
-- **WhatsApp Integration** - Direct customer engagement for quotes and inquiries
-- **Dark/Light Mode** - Full theme support
+- **Admin Panel** - Secure product, banner, and settings management
+- **Banner Management** - Dynamic home page banner creation and editing
+- **WhatsApp Integration** - Direct customer engagement with official branding
+- **Dark/Light Mode** - Full theme support with Sun/Moon toggle
 - **Responsive Design** - Optimized for all devices
+- **MikroTik Compliance** - Legal trademark disclaimers in footer
 
 ## Run Locally
 
@@ -41,20 +43,24 @@ A lightweight, production-ready website for NEXLYN Distributions, an authorized 
 
 ## Admin Panel Access
 
-The admin panel is protected by a passcode defined in `constants.tsx`. Access it by navigating to the Admin section and entering the passcode.
+The admin panel is protected by a passcode. Access it by clicking the shield icon in the header and entering the passcode.
 
-Default features:
+**Admin Passcode:** `vidi-admin-2025`
+
+Features:
 - Product management (add, edit, delete)
+- Banner management (create, edit, delete home page banners)
 - WhatsApp number configuration
 - Company information updates
-- Inventory statistics dashboard
+- Data persistence via localStorage
 
 ## Tech Stack
 
 - **React 19** with TypeScript
 - **Vite** for fast development and optimized builds
-- **Tailwind CSS** (via inline styles) for modern UI
+- **Tailwind CSS v3.4** (npm package, not CDN)
 - **LocalStorage** for data persistence
+- **No external APIs** - Fully self-contained
 
 ## Deployment
 
@@ -70,22 +76,27 @@ Simply build the project and deploy the `dist` folder.
 
 ```
 /
-├── App.tsx           # Main application component
-├── constants.tsx     # Product data and configuration
+├── App.tsx           # Main application component with all features
+├── constants.tsx     # Product data, categories, and configuration
 ├── types.ts          # TypeScript type definitions
 ├── index.tsx         # Application entry point
+├── index.css         # Tailwind CSS directives and custom utilities
 ├── index.html        # HTML template
-└── vite.config.ts    # Vite configuration
+├── tailwind.config.js # Tailwind CSS configuration
+├── postcss.config.js  # PostCSS configuration
+├── vite.config.ts    # Vite build configuration
+└── package.json      # Dependencies and scripts
 ```
 
 ## Performance
 
 This optimized version features:
-- ✅ Minimal dependency footprint (only React and React-DOM)
-- ✅ Fast build times (~100ms)
-- ✅ Small bundle size
+- ✅ Minimal dependencies (139 packages total)
+- ✅ Fast build times (~2.2 seconds)
+- ✅ Small bundle size (266KB JS + 39KB CSS, gzipped: 77KB + 6.5KB)
 - ✅ No external API dependencies
 - ✅ Production-ready code
+- ✅ Proper Tailwind CSS integration (no CDN)
 
 ## License
 
