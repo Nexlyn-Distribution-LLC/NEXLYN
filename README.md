@@ -1,86 +1,109 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# NEXLYN Project Hub
 
-# Run and deploy your AI Studio app
+NEXLYN is the central project hub for **Nexlyn-Distribution-LLC**.  
+This repository documents architecture, ownership, operations, and development workflows for Nexlyn initiatives.
 
-This contains everything you need to run your app locally.
+## Organization Structure
 
-View your app in AI Studio: https://ai.studio/apps/drive/1TooJrvvYNEPtXmyX5sfuyYKZ-ofUdW0j
+### 1) Nexlyn Core Organization
+- Organization: `Nexlyn-Distribution-LLC`
+- Role: Main business and product umbrella for Nexlyn work
 
-## Run Locally
+Repositories:
+- `Nexlyn-Distribution-LLC/NEXLYN` (public)
+  - Main project hub and web/app experience
+  - Documentation, onboarding, workflow references
+- `Nexlyn-Distribution-LLC/IXR-Verified-Access` (private)
+  - Internal/private data-access and verification workflows
 
-**Prerequisites:** Node.js
+### 2) Parallel Brand Organizations
+- `BA-GOO`
+  - `BA-GOO/BA-GOO-eMoto-Hub` (public)
+  - Dedicated e-Moto project space
+- `API-9Ruby`
+  - Reserved for API-focused projects (currently no active repositories)
 
+## Consolidation Policy
 
+To keep ownership clean and scalable:
+- All Nexlyn-owned repositories live under `Nexlyn-Distribution-LLC`
+- BA-GOO assets live under `BA-GOO`
+- API-first projects should live under `API-9Ruby`
+- Personal accounts are used for individual identity and contributor access, not long-term project ownership
+
+## Repository Governance
+
+### Naming Standards
+- Use clear, product-focused names
+- Avoid temporary suffixes for production repos
+- Keep one canonical repo per product line
+
+### Visibility Standards
+- Public repos: product sites, docs, open workflows
+- Private repos: sensitive data pipelines, internal tools, partner-only operations
+
+### Access Model
+- Organization ownership stays centralized
+- Contributors can be added with least privilege (`read` / `write` / `admin` as needed)
+- Use org-owned repos for continuity across account changes
+
+## NEXLYN App Quickstart
+
+This repository also contains the NEXLYN app setup.
+
+### Prerequisites
+- Node.js 18+
+- npm
+
+### Local Run
 1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Configure environment variables in `.env.local`:
-   ```env
-   # Gemini AI API Key
-   GEMINI_API_KEY=your_gemini_api_key_here
-   
-   # Cloudinary Configuration (for admin image uploads)
-   VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
-   VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
-   ```
-
-3. Run the app:
-   ```bash
-   npm run dev
-   ```
-
-## Cloudinary Setup for Image Uploads
-
-The admin panel uses Cloudinary for secure image hosting. Follow these steps:
-
-### 1. Create a Free Cloudinary Account
-- Go to https://cloudinary.com/users/register/free
-- Sign up for a free account (25GB storage, 25GB bandwidth/month)
-
-### 2. Get Your Cloud Name
-- After logging in, go to Dashboard
-- Copy your **Cloud Name** (e.g., `dxxxxxxxxxxxxx`)
-
-### 3. Create an Upload Preset
-- Go to Settings → Upload → Upload Presets
-- Click "Add upload preset"
-- Set **Signing Mode** to "Unsigned"
-- Set **Folder** to "nexlyn-products" (optional)
-- Copy the **Upload preset name** (e.g., `nexlyn_unsigned`)
-
-### 4. Update .env.local
-```env
-VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name_here
-VITE_CLOUDINARY_UPLOAD_PRESET=your_preset_name_here
+```bash
+npm install
 ```
 
-## Features
+2. Configure environment variables in `.env.local`:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
+VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
+```
 
-### ✅ Retained from Original Design
-- **WhatsApp Integration** - Existing ICONS.WhatsApp component
-- **AI Chat** - "Grid Expert" and "NEX-AI Active" branding
-- **Admin Panel Structure** - Security authorization, stats dashboard
+3. Start development server:
+```bash
+npm run dev
+```
 
-### 🆕 New Enhancements
-- **File Upload** - Direct image upload to Cloudinary with preview
-- **Image Management** - Upload progress, file validation, preview
-- **Dual Input** - Support both file upload and manual URL entry
+## Cloudinary Setup (Image Upload)
+1. Create free account: <https://cloudinary.com/users/register/free>
+2. Copy **Cloud Name** from dashboard
+3. Create unsigned upload preset in **Settings -> Upload Presets**
+4. Add values to `.env.local`
+
+## Core Features
+- WhatsApp integration
+- AI chat workflow
+- Admin dashboard and authorization paths
+- Product/image upload pipeline (Cloudinary)
 
 ## Tech Stack
-- **React 18** with TypeScript
-- **Vite** for fast development
-- **Tailwind CSS** for styling
-- **Google Gemini AI** for chat intelligence
-- **Cloudinary** for image hosting
+- React 18 + TypeScript
+- Vite
+- Tailwind CSS
+- Google Gemini integration
+- Cloudinary media pipeline
 
-## Deployment
-This app is optimized for deployment on:
+## Deployment Targets
 - GitHub Pages
 - Vercel
 - Netlify
 
-Make sure to set environment variables in your deployment platform's settings.
+## Operations Checklist
+- Keep org/repo ownership aligned with project brand
+- Keep README and runbooks current after structural changes
+- Protect default branch and require PR review for production repos
+- Use issue templates for incidents, features, and release checklists
+
+## Change Log (Structure)
+- 2026-02-23: Consolidated Nexlyn repos under `Nexlyn-Distribution-LLC`
+- 2026-02-23: Moved BA-GOO repo under `BA-GOO`
+- 2026-02-23: Expanded `NEXLYN` README into organization-level project documentation
